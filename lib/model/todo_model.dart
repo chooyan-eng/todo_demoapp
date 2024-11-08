@@ -73,7 +73,7 @@ class TodoModel {
       deadline: deadline ?? original.deadline,
     );
 
-    _storage.save(updatedTodo);
+    _storage.update(updatedTodo);
     _todos[_todos.indexWhere((todo) => todo.id == id)] = updatedTodo;
     _todoController.add(_todos);
   }

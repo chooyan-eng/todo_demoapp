@@ -7,6 +7,10 @@ class TodoStorage {
     _todos.add(todo);
   }
 
+  void update(Todo todo) {
+    _todos[_todos.indexWhere((t) => t.id == todo.id)] = todo;
+  }
+
   List<Todo> fetchAll() {
     return [..._todos];
   }
