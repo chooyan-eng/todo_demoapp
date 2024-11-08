@@ -116,14 +116,26 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                         'Deadline: ${state.formattedDeadline}',
                       ),
                     ),
+                    if (state.errorMessage != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        state.errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _viewModel.isValid
                             ? () {
-                                _viewModel.save();
-                                Navigator.of(context).pop();
+                                final succeeded = _viewModel.save();
+                                if (succeeded) {
+                                  Navigator.of(context).pop();
+                                }
                               }
                             : null,
                         child: const Text('Add Todo'),

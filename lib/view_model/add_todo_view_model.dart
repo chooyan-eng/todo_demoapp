@@ -7,21 +7,25 @@ class AddTodoViewState {
     required this.title,
     required this.estimatedHours,
     required this.deadline,
+    this.errorMessage,
   });
 
   final String title;
   final double estimatedHours;
   final DateTime deadline;
+  final String? errorMessage;
 
   AddTodoViewState copyWith({
     String? title,
     double? estimatedHours,
     DateTime? deadline,
+    String? errorMessage,
   }) {
     return AddTodoViewState(
       title: title ?? this.title,
       estimatedHours: estimatedHours ?? this.estimatedHours,
       deadline: deadline ?? this.deadline,
+      errorMessage: errorMessage,
     );
   }
 
@@ -51,14 +55,20 @@ class AddTodoViewModel extends ValueNotifier<AddTodoViewState> {
     value = value.copyWith(deadline: deadline);
   }
 
-  void save() {
-    if (!isValid) return;
+  bool save() {
+    if (!isValid) return false;
 
-    _model.addTodo(
-      title: value.title,
-      estimatedHours: value.estimatedHours,
-      deadline: value.deadline,
-    );
+    try {
+      _model.addTodo(
+        title: value.title,
+        estimatedHours: value.estimatedHours,
+        deadline: value.deadline,
+      );
+    } on DeadlineRestrictionException catch (e) {
+      value = value.copyWith(errorMessage: e.message);
+      return false;
+    }
+    return true;
   }
 
   void reset() {
