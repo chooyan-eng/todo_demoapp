@@ -68,6 +68,25 @@ class _TodoViewState extends State<TodoView> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          ValueListenableBuilder<TodoViewState>(
+            valueListenable: _viewModel,
+            builder: (context, state, _) {
+              return IconButton(
+                icon: Icon(
+                  state.showCompleted
+                      ? Icons.check_circle
+                      : Icons.check_circle_outline,
+                  color: Colors.tealAccent[400],
+                ),
+                onPressed: _viewModel.toggleShowCompleted,
+                tooltip: state.showCompleted
+                    ? 'Hide completed tasks'
+                    : 'Show completed tasks',
+              );
+            },
+          ),
+        ],
         elevation: 0,
       ),
       floatingActionButton: FloatingActionButton(
@@ -81,7 +100,8 @@ class _TodoViewState extends State<TodoView> {
           ValueListenableBuilder<TodoViewState>(
             valueListenable: _viewModel,
             builder: (context, state, _) {
-              return state.todos.isEmpty
+              final todos = state.filteredTodos;
+              return todos.isEmpty
                   ? const SliverFillRemaining(
                       child: Center(
                         child: Column(
@@ -109,7 +129,7 @@ class _TodoViewState extends State<TodoView> {
                       sliver: SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            final todo = state.todos[index];
+                            final todo = todos[index];
                             return Card(
                               margin: const EdgeInsets.symmetric(vertical: 4),
                               child: Opacity(
@@ -178,7 +198,7 @@ class _TodoViewState extends State<TodoView> {
                               ),
                             );
                           },
-                          childCount: state.todos.length,
+                          childCount: todos.length,
                         ),
                       ),
                     );
