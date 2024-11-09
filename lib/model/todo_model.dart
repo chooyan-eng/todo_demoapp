@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:todo_demoapp/storage/todo_storage.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_demoapp/model/member.dart';
 
 class DeadlineRestrictionException implements Exception {
   DeadlineRestrictionException(this.message);
@@ -15,6 +16,9 @@ class Todo {
     required this.isCompleted,
     required this.estimatedHours,
     required this.deadline,
+    required this.assignee,
+    required this.createdBy,
+    this.isPublic = false,
   });
 
   final String id;
@@ -22,9 +26,32 @@ class Todo {
   bool isCompleted;
   final double estimatedHours;
   final DateTime deadline;
+  final Member assignee;
+  final Member createdBy;
+  bool isPublic;
 
   String get formattedDeadline =>
       DateFormat('yyyy/MM/dd HH:mm').format(deadline);
+
+  Todo copyWith({
+    String? title,
+    bool? isCompleted,
+    double? estimatedHours,
+    DateTime? deadline,
+    Member? assignee,
+    bool? isPublic,
+  }) {
+    return Todo(
+      id: id,
+      title: title ?? this.title,
+      isCompleted: isCompleted ?? this.isCompleted,
+      estimatedHours: estimatedHours ?? this.estimatedHours,
+      deadline: deadline ?? this.deadline,
+      assignee: assignee ?? this.assignee,
+      createdBy: createdBy,
+      isPublic: isPublic ?? this.isPublic,
+    );
+  }
 }
 
 class TodoModel {
@@ -43,6 +70,7 @@ class TodoModel {
     required String title,
     required double estimatedHours,
     required DateTime deadline,
+    required Member assignee,
   }) {
     try {
       _validateDeadlineRestriction(estimatedHours, deadline);
@@ -56,6 +84,9 @@ class TodoModel {
       isCompleted: false,
       estimatedHours: estimatedHours,
       deadline: deadline,
+      assignee: assignee,
+      createdBy: Member(id: '', name: '', icon: IconType.person),
+      isPublic: false,
     );
     _storage.save(todo);
     _todos
@@ -103,6 +134,7 @@ class TodoModel {
     String? title,
     double? estimatedHours,
     DateTime? deadline,
+    Member? assignee,
   }) {
     final original =
         _storage.fetchAll().firstWhereOrNull((todo) => todo.id == id);
@@ -116,6 +148,9 @@ class TodoModel {
       isCompleted: original.isCompleted,
       estimatedHours: estimatedHours ?? original.estimatedHours,
       deadline: deadline ?? original.deadline,
+      assignee: assignee ?? original.assignee,
+      createdBy: original.createdBy,
+      isPublic: original.isPublic,
     );
 
     _storage.update(updatedTodo);
@@ -143,7 +178,34 @@ class TodoModel {
       isCompleted: !todo.isCompleted,
       estimatedHours: todo.estimatedHours,
       deadline: todo.deadline,
+      assignee: todo.assignee,
+      createdBy: todo.createdBy,
+      isPublic: todo.isPublic,
     );
+
+    _storage.update(updatedTodo);
+    _todos[index] = updatedTodo;
+    _todoController.add(_todos);
+  }
+
+  void toggleTodoVisibility(String id) {
+    final index = _todos.indexWhere((todo) => todo.id == id);
+    if (index == -1) return;
+
+    final todo = _todos[index];
+    final updatedTodo = todo.copyWith(isPublic: !todo.isPublic);
+
+    _storage.update(updatedTodo);
+    _todos[index] = updatedTodo;
+    _todoController.add(_todos);
+  }
+
+  void updateTodoAssignee(String id, Member newAssignee) {
+    final index = _todos.indexWhere((todo) => todo.id == id);
+    if (index == -1) return;
+
+    final todo = _todos[index];
+    final updatedTodo = todo.copyWith(assignee: newAssignee);
 
     _storage.update(updatedTodo);
     _todos[index] = updatedTodo;

@@ -1,3 +1,4 @@
+import 'package:todo_demoapp/model/member.dart';
 import 'package:todo_demoapp/model/todo_model.dart';
 import 'package:todo_demoapp/storage/todo_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +7,12 @@ void main() {
   late TodoStorage storage;
   late TodoModel model;
   late DateTime now;
+
+  final member = Member(
+    id: 'test-member',
+    name: 'Test Member',
+    icon: IconType.person,
+  );
 
   setUp(() {
     storage = TodoStorage();
@@ -29,6 +36,7 @@ void main() {
         title: title,
         estimatedHours: estimatedHours,
         deadline: deadline,
+        assignee: member,
       );
 
       // Assert
@@ -61,6 +69,7 @@ void main() {
         title: title,
         estimatedHours: estimatedHours,
         deadline: deadline,
+        assignee: member,
       );
     });
   });
@@ -73,6 +82,7 @@ void main() {
         title: 'Original Title',
         estimatedHours: 1.0,
         deadline: now.add(const Duration(hours: 4)),
+        assignee: member,
       );
       todoId = storage.fetchAll().first.id;
     });
@@ -144,6 +154,7 @@ void main() {
         title: 'Test Todo',
         estimatedHours: 1.0,
         deadline: now.add(const Duration(hours: 3)),
+        assignee: member,
       );
       todoId = storage.fetchAll().first.id;
     });
@@ -198,6 +209,7 @@ void main() {
           title: 'Test Todo',
           estimatedHours: estimatedHours,
           deadline: deadline,
+          assignee: member,
         ),
         throwsA(isA<DeadlineRestrictionException>()),
       );
@@ -210,6 +222,7 @@ void main() {
         title: 'First Todo',
         estimatedHours: 3.0,
         deadline: now.add(const Duration(hours: 5)),
+        assignee: member,
       );
 
       // Try to add second todo: 3 hours, due in 5 hours
@@ -219,6 +232,7 @@ void main() {
           title: 'Second Todo',
           estimatedHours: 3.0,
           deadline: now.add(const Duration(hours: 5)),
+          assignee: member,
         ),
         throwsA(isA<DeadlineRestrictionException>()),
       );
@@ -231,6 +245,7 @@ void main() {
         title: 'First Todo',
         estimatedHours: 2.0,
         deadline: now.add(const Duration(hours: 8)),
+        assignee: member,
       );
 
       // Act & Assert - should succeed
@@ -241,6 +256,7 @@ void main() {
           title: 'Second Todo',
           estimatedHours: 3.0,
           deadline: now.add(const Duration(hours: 8)),
+          assignee: member,
         ),
         returnsNormally,
       );
@@ -253,6 +269,7 @@ void main() {
         title: 'Later Todo',
         estimatedHours: 2.0,
         deadline: now.add(const Duration(hours: 10)),
+        assignee: member,
       );
 
       // Act & Assert
@@ -263,6 +280,7 @@ void main() {
           title: 'Earlier Todo',
           estimatedHours: 3.0,
           deadline: now.add(const Duration(hours: 5)),
+          assignee: member,
         ),
         returnsNormally,
       );
@@ -276,6 +294,7 @@ void main() {
         title: 'First Todo',
         estimatedHours: 3.0,
         deadline: now.add(const Duration(hours: 5)),
+        assignee: member,
       );
 
       // Complete the first todo
@@ -290,6 +309,7 @@ void main() {
           title: 'Second Todo',
           estimatedHours: 3.0,
           deadline: now.add(const Duration(hours: 5)),
+          assignee: member,
         ),
         returnsNormally,
       );
@@ -304,6 +324,7 @@ void main() {
         title: 'Completed Todo',
         estimatedHours: 2.0,
         deadline: now.add(const Duration(hours: 5)),
+        assignee: member,
       );
       model.toggleTodoCompletion(storage.fetchAll().first.id);
 
@@ -312,6 +333,7 @@ void main() {
         title: 'Incomplete Todo',
         estimatedHours: 3.0,
         deadline: now.add(const Duration(hours: 5)),
+        assignee: member,
       );
 
       // Act & Assert
@@ -322,6 +344,7 @@ void main() {
           title: 'Third Todo',
           estimatedHours: 2.5,
           deadline: now.add(const Duration(hours: 5)),
+          assignee: member,
         ),
         throwsA(isA<DeadlineRestrictionException>()),
       );
@@ -336,6 +359,7 @@ void main() {
         title: 'Test Todo',
         estimatedHours: 1.0,
         deadline: DateTime.now().add(const Duration(hours: 3)),
+        assignee: member,
       );
       todoId = storage.fetchAll().first.id;
     });

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:todo_demoapp/model/todo_model.dart';
+import 'package:todo_demoapp/model/member.dart';
+import 'package:todo_demoapp/model/member_model.dart';
 import 'package:intl/intl.dart';
 
 class AddTodoViewState {
@@ -7,24 +9,32 @@ class AddTodoViewState {
     required this.title,
     required this.estimatedHours,
     required this.deadline,
+    required this.assignee,
+    required this.availableMembers,
     this.errorMessage,
   });
 
   final String title;
   final double estimatedHours;
   final DateTime deadline;
+  final Member assignee;
+  final List<Member> availableMembers;
   final String? errorMessage;
 
   AddTodoViewState copyWith({
     String? title,
     double? estimatedHours,
     DateTime? deadline,
+    Member? assignee,
+    List<Member>? availableMembers,
     String? errorMessage,
   }) {
     return AddTodoViewState(
       title: title ?? this.title,
       estimatedHours: estimatedHours ?? this.estimatedHours,
       deadline: deadline ?? this.deadline,
+      assignee: assignee ?? this.assignee,
+      availableMembers: availableMembers ?? this.availableMembers,
       errorMessage: errorMessage,
     );
   }
@@ -34,14 +44,17 @@ class AddTodoViewState {
 }
 
 class AddTodoViewModel extends ValueNotifier<AddTodoViewState> {
-  AddTodoViewModel(this._model)
+  AddTodoViewModel(this._todoModel, this._memberModel)
       : super(AddTodoViewState(
           title: '',
           estimatedHours: 1.0,
           deadline: DateTime.now().add(const Duration(days: 1)),
+          assignee: _memberModel.members.first,
+          availableMembers: _memberModel.members,
         ));
 
-  final TodoModel _model;
+  final TodoModel _todoModel;
+  final MemberModel _memberModel;
 
   void updateTitle(String title) {
     value = value.copyWith(title: title);
@@ -55,14 +68,19 @@ class AddTodoViewModel extends ValueNotifier<AddTodoViewState> {
     value = value.copyWith(deadline: deadline);
   }
 
+  void updateAssignee(Member member) {
+    value = value.copyWith(assignee: member);
+  }
+
   bool save() {
     if (!isValid) return false;
 
     try {
-      _model.addTodo(
+      _todoModel.addTodo(
         title: value.title,
         estimatedHours: value.estimatedHours,
         deadline: value.deadline,
+        assignee: value.assignee,
       );
     } on DeadlineRestrictionException catch (e) {
       value = value.copyWith(errorMessage: e.message);
@@ -76,6 +94,8 @@ class AddTodoViewModel extends ValueNotifier<AddTodoViewState> {
       title: '',
       estimatedHours: 1.0,
       deadline: DateTime.now().add(const Duration(days: 1)),
+      assignee: _memberModel.members.first,
+      availableMembers: _memberModel.members,
     );
   }
 

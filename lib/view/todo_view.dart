@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_demoapp/view_model/todo_view_model.dart';
 import 'package:todo_demoapp/model/todo_model.dart';
 import 'package:todo_demoapp/view/edit_todo_view.dart';
+import 'package:todo_demoapp/view/member_list_view.dart';
 
 class TodoView extends StatefulWidget {
   const TodoView({super.key});
@@ -69,6 +70,20 @@ class _TodoViewState extends State<TodoView> {
           ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.people_outline,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const MemberListView(),
+                ),
+              );
+            },
+            tooltip: 'Team Members',
+          ),
           ValueListenableBuilder<TodoViewState>(
             valueListenable: _viewModel,
             builder: (context, state, _) {

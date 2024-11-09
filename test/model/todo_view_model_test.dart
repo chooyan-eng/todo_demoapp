@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:todo_demoapp/model/member.dart';
 import 'package:todo_demoapp/model/todo_model.dart';
 import 'package:todo_demoapp/storage/todo_storage.dart';
 import 'package:todo_demoapp/view_model/todo_view_model.dart';
@@ -7,6 +8,12 @@ void main() {
   late TodoStorage storage;
   late TodoModel model;
   late TodoViewModel viewModel;
+
+  final member = Member(
+    id: 'test-member',
+    name: 'Test Member',
+    icon: IconType.person,
+  );
 
   setUp(() {
     storage = TodoStorage();
@@ -20,6 +27,7 @@ void main() {
         title: 'Test Todo',
         estimatedHours: 1.0,
         deadline: DateTime.now().add(const Duration(hours: 3)),
+        assignee: member,
       );
     });
 
@@ -36,6 +44,7 @@ void main() {
         title: 'Incomplete Todo',
         estimatedHours: 1.0,
         deadline: DateTime.now().add(const Duration(hours: 3)),
+        assignee: member,
       );
 
       // Toggle filter
@@ -54,6 +63,7 @@ void main() {
         title: 'Incomplete Todo',
         estimatedHours: 1.0,
         deadline: DateTime.now().add(const Duration(hours: 3)),
+        assignee: member,
       );
 
       // Should show all todos

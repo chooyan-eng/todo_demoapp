@@ -2,6 +2,7 @@ import 'package:todo_demoapp/model_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_demoapp/model/todo_model.dart';
 import 'package:todo_demoapp/view_model/edit_todo_view_model.dart';
+import 'package:todo_demoapp/view/member_select_field.dart';
 
 class EditTodoView extends StatefulWidget {
   const EditTodoView({
@@ -28,8 +29,11 @@ class _EditTodoViewState extends State<EditTodoView> {
   @override
   void initState() {
     super.initState();
-    _viewModel =
-        EditTodoViewModel(ModelProvider.todoModelOf(context), widget.todo);
+    _viewModel = EditTodoViewModel(
+      ModelProvider.todoModelOf(context),
+      ModelProvider.memberModelOf(context),
+      widget.todo,
+    );
     _titleController = TextEditingController(text: widget.todo.title);
     _titleController.addListener(() {
       _viewModel.updateTitle(_titleController.text);
@@ -106,6 +110,12 @@ class _EditTodoViewState extends State<EditTodoView> {
                   labelStyle: TextStyle(color: Colors.grey),
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
+              ),
+              const SizedBox(height: 16),
+              MemberSelectField(
+                members: state.availableMembers,
+                selectedMember: state.assignee,
+                onChanged: _viewModel.updateAssignee,
               ),
               const SizedBox(height: 24),
               Text(

@@ -1,6 +1,7 @@
 import 'package:todo_demoapp/model_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_demoapp/view_model/add_todo_view_model.dart';
+import 'package:todo_demoapp/view/member_select_field.dart';
 
 class AddTodoDialog extends StatefulWidget {
   const AddTodoDialog({super.key});
@@ -22,7 +23,10 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
   @override
   void initState() {
     super.initState();
-    _viewModel = AddTodoViewModel(ModelProvider.todoModelOf(context));
+    _viewModel = AddTodoViewModel(
+      ModelProvider.todoModelOf(context),
+      ModelProvider.memberModelOf(context),
+    );
   }
 
   Future<void> _showDatePicker(BuildContext context) async {
@@ -92,7 +96,13 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                     prefixIcon: Icon(Icons.task_alt),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
+                MemberSelectField(
+                  members: state.availableMembers,
+                  selectedMember: state.assignee,
+                  onChanged: _viewModel.updateAssignee,
+                ),
+                const SizedBox(height: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
