@@ -1,5 +1,5 @@
-import 'package:arc_todo/model_provider.dart';
-import 'package:arc_todo/view/todo_view.dart';
+import 'package:todo_demoapp/model_provider.dart';
+import 'package:todo_demoapp/view/todo_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {

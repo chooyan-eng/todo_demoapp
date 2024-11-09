@@ -1,6 +1,6 @@
 {
-    "name": "arc_todo",
-    "short_name": "arc_todo",
+    "name": "todo_demoapp",
+    "short_name": "todo_demoapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

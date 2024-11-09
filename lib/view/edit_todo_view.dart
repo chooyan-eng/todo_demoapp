@@ -1,7 +1,7 @@
-import 'package:arc_todo/model_provider.dart';
+import 'package:todo_demoapp/model_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:arc_todo/model/todo_model.dart';
-import 'package:arc_todo/view_model/edit_todo_view_model.dart';
+import 'package:todo_demoapp/model/todo_model.dart';
+import 'package:todo_demoapp/view_model/edit_todo_view_model.dart';
 
 class EditTodoView extends StatefulWidget {
   const EditTodoView({

@@ -1,6 +1,6 @@
-import 'package:arc_todo/model_provider.dart';
+import 'package:todo_demoapp/model_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:arc_todo/view_model/add_todo_view_model.dart';
+import 'package:todo_demoapp/view_model/add_todo_view_model.dart';
 
 class AddTodoDialog extends StatefulWidget {
   const AddTodoDialog({super.key});

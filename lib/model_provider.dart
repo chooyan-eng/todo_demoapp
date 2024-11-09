@@ -1,5 +1,5 @@
-import 'package:arc_todo/model/todo_model.dart';
-import 'package:arc_todo/storage/todo_storage.dart';
+import 'package:todo_demoapp/model/todo_model.dart';
+import 'package:todo_demoapp/storage/todo_storage.dart';
 import 'package:flutter/material.dart';
 
 class ModelProvider extends StatefulWidget {

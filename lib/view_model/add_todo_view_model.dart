@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:arc_todo/model/todo_model.dart';
+import 'package:todo_demoapp/model/todo_model.dart';
 import 'package:intl/intl.dart';
 
 class AddTodoViewState {

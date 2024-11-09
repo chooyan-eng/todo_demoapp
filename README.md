@@ -1,4 +1,4 @@
-# arc_todo
+# todo_demoapp
 
 This application is a sample app for showing MVVM pattern for Flutter app.
 

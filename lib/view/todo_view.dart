@@ -1,9 +1,9 @@
-import 'package:arc_todo/model_provider.dart';
-import 'package:arc_todo/view/add_todo_dialog.dart';
+import 'package:todo_demoapp/model_provider.dart';
+import 'package:todo_demoapp/view/add_todo_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:arc_todo/view_model/todo_view_model.dart';
-import 'package:arc_todo/model/todo_model.dart';
-import 'package:arc_todo/view/edit_todo_view.dart';
+import 'package:todo_demoapp/view_model/todo_view_model.dart';
+import 'package:todo_demoapp/model/todo_model.dart';
+import 'package:todo_demoapp/view/edit_todo_view.dart';
 
 class TodoView extends StatefulWidget {
   const TodoView({super.key});
