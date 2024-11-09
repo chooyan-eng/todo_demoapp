@@ -267,5 +267,110 @@ void main() {
         returnsNormally,
       );
     });
+
+    test('should not consider completed todos when checking time availability',
+        () {
+      // Arrange
+      // Add first todo: 3 hours, due in 5 hours
+      model.addTodo(
+        title: 'First Todo',
+        estimatedHours: 3.0,
+        deadline: now.add(const Duration(hours: 5)),
+      );
+
+      // Complete the first todo
+      final firstTodoId = storage.fetchAll().first.id;
+      model.toggleTodoCompletion(firstTodoId);
+
+      // Act & Assert
+      // Add second todo: 3 hours, due in 5 hours
+      // Should succeed because first todo is completed
+      expect(
+        () => model.addTodo(
+          title: 'Second Todo',
+          estimatedHours: 3.0,
+          deadline: now.add(const Duration(hours: 5)),
+        ),
+        returnsNormally,
+      );
+    });
+
+    test(
+        'should only consider incomplete todos when checking time availability',
+        () {
+      // Arrange
+      // Add and complete first todo
+      model.addTodo(
+        title: 'Completed Todo',
+        estimatedHours: 2.0,
+        deadline: now.add(const Duration(hours: 5)),
+      );
+      model.toggleTodoCompletion(storage.fetchAll().first.id);
+
+      // Add second incomplete todo
+      model.addTodo(
+        title: 'Incomplete Todo',
+        estimatedHours: 3.0,
+        deadline: now.add(const Duration(hours: 5)),
+      );
+
+      // Act & Assert
+      // Try to add third todo: 2.5 hours, due in 5 hours
+      // Should fail because incomplete todo needs 3 hours
+      expect(
+        () => model.addTodo(
+          title: 'Third Todo',
+          estimatedHours: 2.5,
+          deadline: now.add(const Duration(hours: 5)),
+        ),
+        throwsA(isA<DeadlineRestrictionException>()),
+      );
+    });
+  });
+
+  group('toggleTodoCompletion', () {
+    late String todoId;
+
+    setUp(() {
+      model.addTodo(
+        title: 'Test Todo',
+        estimatedHours: 1.0,
+        deadline: DateTime.now().add(const Duration(hours: 3)),
+      );
+      todoId = storage.fetchAll().first.id;
+    });
+
+    test('should toggle completion status', () {
+      // Initial state
+      expect(storage.fetchAll().first.isCompleted, false);
+
+      // First toggle
+      model.toggleTodoCompletion(todoId);
+      expect(storage.fetchAll().first.isCompleted, true);
+
+      // Second toggle
+      model.toggleTodoCompletion(todoId);
+      expect(storage.fetchAll().first.isCompleted, false);
+    });
+
+    test('should notify listeners when todo completion is toggled', () {
+      // Act & Assert
+      expectLater(
+        model.todoStream,
+        emits(predicate<List<Todo>>((todos) {
+          return todos.length == 1 && todos.first.isCompleted == true;
+        })),
+      );
+
+      model.toggleTodoCompletion(todoId);
+    });
+
+    test('should do nothing when todo id does not exist', () {
+      // Act
+      model.toggleTodoCompletion('non-existent-id');
+
+      // Assert
+      expect(storage.fetchAll().first.isCompleted, false); // unchanged
+    });
   });
 }

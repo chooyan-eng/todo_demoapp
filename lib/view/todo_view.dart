@@ -112,58 +112,69 @@ class _TodoViewState extends State<TodoView> {
                             final todo = state.todos[index];
                             return Card(
                               margin: const EdgeInsets.symmetric(vertical: 4),
-                              child: ListTile(
-                                leading: Icon(
-                                  todo.isCompleted
-                                      ? Icons.check_circle
-                                      : Icons.check_circle_outline,
-                                  color: Colors.tealAccent[400],
-                                ),
-                                title: Text(
-                                  todo.title,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Estimated: ${todo.estimatedHours}h',
-                                      style: TextStyle(
-                                        color: Colors.grey[400],
-                                      ),
+                              child: Opacity(
+                                opacity: todo.isCompleted ? 0.5 : 1.0,
+                                child: ListTile(
+                                  leading: IconButton(
+                                    icon: Icon(
+                                      todo.isCompleted
+                                          ? Icons.check_circle
+                                          : Icons.check_circle_outline,
+                                      color: Colors.tealAccent[400],
                                     ),
-                                    Text(
-                                      'Due: ${todo.formattedDeadline}',
-                                      style: TextStyle(
-                                        color: todo.deadline
-                                                .isBefore(DateTime.now())
-                                            ? Colors.redAccent[400]
-                                            : Colors.grey[400],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.grey[400],
+                                    onPressed: () => _viewModel
+                                        .toggleTodoCompletion(todo.id),
                                   ),
-                                  onPressed: () async {
-                                    final result =
-                                        await showDeleteConfirmation(todo);
-                                    if (result) {
-                                      _viewModel.deleteTodo(todo.id);
-                                    }
+                                  title: Text(
+                                    todo.title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      decoration: todo.isCompleted
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Estimated: ${todo.estimatedHours}h',
+                                        style: TextStyle(
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                      Text(
+                                        'Due: ${todo.formattedDeadline}',
+                                        style: TextStyle(
+                                          color: todo.deadline
+                                                  .isBefore(DateTime.now())
+                                              ? Colors.redAccent[400]
+                                              : Colors.grey[400],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.grey[400],
+                                    ),
+                                    onPressed: () async {
+                                      final result =
+                                          await showDeleteConfirmation(todo);
+                                      if (result) {
+                                        _viewModel.deleteTodo(todo.id);
+                                      }
+                                    },
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      EditTodoView.route(todo),
+                                    );
                                   },
                                 ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    EditTodoView.route(todo),
-                                  );
-                                },
                               ),
                             );
                           },

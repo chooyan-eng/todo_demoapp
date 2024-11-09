@@ -77,6 +77,7 @@ class TodoModel {
 
     // Get all todos that need to be completed before or at this new deadline
     final todosBeforeDeadline = _todos
+        .where((todo) => !todo.isCompleted)
         .where((todo) =>
             todo.deadline.isBefore(newTodoDeadline) ||
             todo.deadline.isAtSameMomentAs(newTodoDeadline))
@@ -128,6 +129,24 @@ class TodoModel {
 
     _storage.delete(id);
     _todos.removeAt(index);
+    _todoController.add(_todos);
+  }
+
+  void toggleTodoCompletion(String id) {
+    final index = _todos.indexWhere((todo) => todo.id == id);
+    if (index == -1) return;
+
+    final todo = _todos[index];
+    final updatedTodo = Todo(
+      id: todo.id,
+      title: todo.title,
+      isCompleted: !todo.isCompleted,
+      estimatedHours: todo.estimatedHours,
+      deadline: todo.deadline,
+    );
+
+    _storage.update(updatedTodo);
+    _todos[index] = updatedTodo;
     _todoController.add(_todos);
   }
 

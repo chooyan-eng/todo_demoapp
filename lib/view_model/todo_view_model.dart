@@ -30,6 +30,10 @@ class TodoViewModel extends ValueNotifier<TodoViewState> {
     _model.deleteTodo(id);
   }
 
+  void toggleTodoCompletion(String id) {
+    _model.toggleTodoCompletion(id);
+  }
+
   @override
   void dispose() {
     _model.dispose();
